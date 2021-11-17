@@ -1,1 +1,68 @@
+# linux error file
+core
+core.*
+
+# stdlogpj (Bluesky) log files
 .logs/
+
+# Python crud
+*.pyc
+*.pyo
+*.h5
+*.hdf
+*.hdf5
+mViewer.log
+
+# MS Visual Studio Code editor
+.vscode
+
+# APS IT
+.loglogin
+
+# SpecWriter (SPEC) data files:
+20*.dat
+
+# APS NFS fileserver crud
+*.swp
+.nfs*
+
+# ipython session log files
+.logs/
+.ipython*.log*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
