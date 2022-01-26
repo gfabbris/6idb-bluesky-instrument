@@ -14,3 +14,4 @@ scaler2.wait_for_connection()
 
 # choose just the channels with EPICS names
 scaler2.select_channels()
+scaler2.stage_sigs["preset_time"] = 1

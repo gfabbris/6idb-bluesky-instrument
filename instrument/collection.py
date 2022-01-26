@@ -24,6 +24,8 @@ logger.info("#### Utilities ####")
 from .utils import *
 from apstools.utils import *
 
+from hkl.user import *
+
 # last line: ensure we have the console's logger
 from .session_logs import logger
 logger.info("#### Startup is complete. ####")

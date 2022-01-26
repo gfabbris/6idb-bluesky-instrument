@@ -3,7 +3,8 @@ motors
 """
 
 #    m1  m2  m3  m4  m5  m6  m7  m8
-__all__ = ["mtest", ]
+#__all__ = ["mtest", ]
+__all__ = []
 
 from ..session_logs import logger
 
@@ -15,7 +16,7 @@ from ophyd import MotorBundle, EpicsMotor, Component, EpicsSignal
 # this motor is not connected yet (good for testing):
 #  6idb1:m20 (phi motor)
 
-mtest = EpicsMotor("6idb1:m20", name="mtest", labels=("motor",))
+#mtest = EpicsMotor("6idb1:m20", name="mtest", labels=("motor",))
 
 # IOC = "FIXME:"
 # m1 = EpicsMotor(f"{IOC}m1", name="m1", labels=("motor",))
