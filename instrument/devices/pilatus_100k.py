@@ -32,7 +32,7 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
         'roi1', 'roi2', 'roi3', 'roi4', 'cam'
     )
     _default_read_attrs = (
-        'hdf1', 'stats1', 'stats2', 'stats3', 'stats4'
+        'hdf1', 'stats1', 'stats2', 'stats3', 'stats4', 'stats5'
     )
 
     image = ADComponent(ImagePlugin, "image1:")
@@ -55,15 +55,22 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
 
     def default_settings(self):
         # Enter all the important default settings here.
-        self.cam.stage_sigs["image_mode"] = "Single"
-        self.cam.stage_sigs["num_images"] = 1
-        self.cam.stage_sigs["acquire_time"] = 1
-        self.cam.stage_sigs["trigger_mode"] = "Internal"
+        self.cam.image_mode.put("Single")
+        self.cam.num_images.put(1)
+        self.cam.acquire_time.put(1)
+        self.cam.trigger_mode.put("Internal")
         self.hdf1.create_directory.put(-5)
-        self.hdf1.stage_sigs["file_write_mode"] = "Capture"
-        self.hdf1.stage_sigs["lazy_open"] = 1
-        self.hdf1.stage_sigs["compression"] = "blosc"
-        self.hdf1.stage_sigs["file_template"] = "%s%s_%5.5d.h5"
+        self.hdf1.file_write_mode.put("Capture")
+        self.hdf1.lazy_open.put(1)
+        self.hdf1.compression.put("blosc")
+        self.hdf1.file_template.put("%s%s_%5.5d.h5")
+
+    # Example of roi config.
+    def plot_roi1(self):
+        self.stats1.total.kind = "hinted"  # Is this signal correct?
+        self.stats2.total.kind = "normal"
+        self.stats3.total.kind = "normal"
+        self.stats4.total.kind = "normal"
 
 
 pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
