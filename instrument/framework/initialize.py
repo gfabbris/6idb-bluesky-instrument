@@ -40,7 +40,6 @@ from bluesky.simulators import summarize_plan
 from bluesky.utils import PersistentDict
 from bluesky.utils import ProgressBarManager
 from bluesky.utils import ts_msg_hook
-from area_detector_handlers.handlers import AreaDetectorHDF5Handler
 from IPython import get_ipython
 from ophyd.signal import EpicsSignalBase
 import databroker
@@ -93,10 +92,6 @@ cat = databroker.catalog[catalog_name]
 # databroker v1 api
 db = cat.v1
 logger.info(f"using databroker catalog '{catalog_name}'")
-
-# Register HDF5 handler
-# TODO: Is this needed if this "default" handler is used?
-cat.register_handler("AD_HDF5", AreaDetectorHDF5Handler, overwrite=True)
 
 # Subscribe metadatastore to documents.
 # If this is removed, data is not saved to metadatastore.
