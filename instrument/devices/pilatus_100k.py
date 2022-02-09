@@ -17,7 +17,9 @@ TEST_IMAGE_DIR = "pilatus100k/%Y/%m/%d/"
 
 
 class MyHDF5Plugin(FileStoreHDF5SingleIterativeWrite, HDF5Plugin):
-    ...
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filestore_spec = 'AD_HDF5_Pilatus_6idb'
 
 
 class MyPilatusDetector(SingleTrigger, PilatusDetector):
@@ -59,7 +61,7 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
         self.hdf1.lazy_open.put(1)
         self.hdf1.compression.put("blosc")
         self.hdf1.file_template.put("%s%s_%5.5d.h5")
-        self.hdf1.auto_save.put("No")
+        self.hdf1.auto_save.put(0)
 
     # Example of roi config.
     def plot_roi1(self):
@@ -70,4 +72,4 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
 
 
 pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
-pilatus100k.hdf1.stage_sigs["auto_save"] = "Yes"
+pilatus100k.hdf1.stage_sigs["auto_save"] = 1
