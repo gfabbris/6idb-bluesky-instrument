@@ -6,22 +6,17 @@ from ophyd.areadetector.plugins import HDF5Plugin_V34 as HDF5Plugin
 from ophyd.areadetector.plugins import OverlayPlugin_V34 as OverlayPlugin
 from ophyd.areadetector.plugins import ROIPlugin_V34 as ROIPlugin
 from ophyd.areadetector.plugins import StatsPlugin_V34 as StatsPlugin
-from ophyd.areadetector.filestore_mixins import FileStoreIterativeWrite
-from apstools.devices import AD_EpicsHdf5FileName
+from ophyd.areadetector.filestore_mixins import (
+    FileStoreHDF5SingleIterativeWrite
+)
 import os
 
-PILATUS_FILES_ROOT = "/home/sector6/6idb"
-BLUESKY_FILES_ROOT = "/beams/USER6IDB/data"
+PILATUS_FILES_ROOT = "/home/det/6IDB"
+BLUESKY_FILES_ROOT = "/home/beams/USER6IDB/Data"
 TEST_IMAGE_DIR = "pilatus100k/%Y/%m/%d/"
 
 
-class MyHDF5EpicsIterativeWriter(
-    AD_EpicsHdf5FileName, FileStoreIterativeWrite
-):
-    pass
-
-
-class MyHDF5Plugin(MyHDF5EpicsIterativeWriter, HDF5Plugin):
+class MyHDF5Plugin(FileStoreHDF5SingleIterativeWrite, HDF5Plugin):
     ...
 
 
@@ -60,10 +55,11 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
         self.cam.acquire_time.put(1)
         self.cam.trigger_mode.put("Internal")
         self.hdf1.create_directory.put(-5)
-        self.hdf1.file_write_mode.put("Capture")
+        self.hdf1.file_write_mode.put("Single")
         self.hdf1.lazy_open.put(1)
         self.hdf1.compression.put("blosc")
         self.hdf1.file_template.put("%s%s_%5.5d.h5")
+        self.hdf1.auto_save.put("No")
 
     # Example of roi config.
     def plot_roi1(self):
@@ -74,4 +70,4 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
 
 
 pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
-pilatus100k.hdf1.stage_sigs["capture"] = 1
+pilatus100k.hdf1.stage_sigs["auto_save"] = "Yes"
