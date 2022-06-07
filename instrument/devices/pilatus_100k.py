@@ -20,7 +20,7 @@ class MyHDF5Plugin(FileStoreHDF5SingleIterativeWrite, HDF5Plugin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.filestore_spec = 'AD_HDF5_Pilatus_6idb'
-
+        
 
 class MyPilatusDetector(SingleTrigger, PilatusDetector):
     """Pilatus detector"""
@@ -70,6 +70,29 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
         self.stats3.total.kind = "normal"
         self.stats4.total.kind = "normal"
 
+    def plot_roi2(self):
+        self.stats1.total.kind = "normal"  # Is this signal correct?
+        self.stats2.total.kind = "hinted"
+        self.stats3.total.kind = "normal"
+        self.stats4.total.kind = "normal"
+
+    def plot_roi3(self):
+        self.stats3.total.kind = "hinted"  # Is this signal correct?
+        self.stats2.total.kind = "normal"
+        self.stats1.total.kind = "normal"
+        self.stats4.total.kind = "normal"
+
+    def plot_roi4(self):
+        self.stats4.total.kind = "hinted"  # Is this signal correct?
+        self.stats2.total.kind = "normal"
+        self.stats3.total.kind = "normal"
+        self.stats1.total.kind = "normal"
+
+    def plot_all(self):
+        for i in range(1, 5):
+            getattr(self, f"stats{i}").total.kind = "hinted"
 
 pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
 pilatus100k.hdf1.stage_sigs["auto_save"] = 1
+pilatus100k.cam.stage_sigs["trigger_mode"] = 0
+pilatus100k.plot_roi1()
