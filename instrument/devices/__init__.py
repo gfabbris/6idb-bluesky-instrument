@@ -14,6 +14,6 @@ from .pol_analyzer import analy
 from .cryo import cryo
 from .diff_table import diff
 from .slits import *
-
-
+from .keith2400 import *
+from .rp100powersupply import *
 

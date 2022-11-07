@@ -1,58 +1,102 @@
 """
-slits
+Slits
 """
+__all__ = ['sl1', 'sl2', 'sl3', 'sl4']
 
-__all__ = """
-    slit3
-    slit4
-""".split()
-
+from ophyd import Device, FormattedComponent, EpicsMotor, MotorBundle, Component
+from apstools.devices import PVPositionerSoftDoneWithStop
+from ..framework import sd
 from ..session_logs import logger
-
 logger.info(__file__)
 
-from ophyd import MotorBundle, EpicsMotor, Component
 
+class SlitDevice(Device):
 
-# 6idb1:m1.DESC                  SL3_Top
-# 6idb1:m2.DESC                  SL3_Bottom
-# 6idb1:m3.DESC                  SL3_Inboard
-# 6idb1:m4.DESC                  SL3_Outboard
-# 6idb1:m5.DESC                  SL4_HCEN
-# 6idb1:m6.DESC                  SL4_HGap
-# 6idb1:m7.DESC                  SL4_VCEN
-# 6idb1:m8.DESC                  SL4_VGap
-# 6idb1:m45.DESC                  SL2_Top
-# 6idb1:m46.DESC                  SL2_Bottom
-# 6idb1:m47.DESC                  SL2_Outboard
-# 6idb1:m48.DESC                  SL2_Inboard
+    # Setting motors
+    top = FormattedComponent(EpicsMotor, '{prefix}{_motorsDict[top]}',
+                             labels=('motors', 'slits'))
 
+    bot = FormattedComponent(EpicsMotor, '{prefix}{_motorsDict[bot]}',
+                             labels=('motors', 'slits'))
 
-class Slits4Blades_6IDB3(MotorBundle):
-    top = Component(EpicsMotor, "m1", labels=("motor",))
-    bottom = Component(EpicsMotor, "m2", labels=("motor",))
-    inboard = Component(EpicsMotor, "m3", labels=("motor",))
-    outboard = Component(EpicsMotor, "m4", labels=("motor",))
+    out = FormattedComponent(EpicsMotor, '{prefix}{_motorsDict[out]}',
+                             labels=('motors', 'slits'))
+
+    inb = FormattedComponent(EpicsMotor, '{prefix}{_motorsDict[inb]}',
+                             labels=('motors', 'slits'))
+
+    # Setting pseudo positioners
+    vcen = FormattedComponent(
+        PVPositionerSoftDoneWithStop,
+        '{prefix}{_slit_prefix}',
+        readback_pv='Vt2.D',
+        setpoint_pv='Vcenter.VAL',
+        labels=('slits',)
+    )
+
+    vsize = FormattedComponent(
+        PVPositionerSoftDoneWithStop,
+        '{prefix}{_slit_prefix}',
+        readback_pv='Vt2.C',
+        setpoint_pv='Vsize.VAL',
+        labels=('slits',)
+    )
+
+    hcen = FormattedComponent(
+        PVPositionerSoftDoneWithStop,
+        '{prefix}{_slit_prefix}',
+        readback_pv='Ht2.D',
+        setpoint_pv='Hcenter.VAL',
+        labels=('slits',)
+    )
+
+    hsize = FormattedComponent(
+        PVPositionerSoftDoneWithStop,
+        '{prefix}{_slit_prefix}',
+        readback_pv='Ht2.C',
+        setpoint_pv='Hsize.VAL',
+        labels=('slits',)
+    )
+
+    def __init__(self, PV, name, motorsDict, slitnum, **kwargs):
+
+        self._motorsDict = motorsDict
+        self._slit_prefix = f'Slit_{slitnum}'
+
+        super().__init__(prefix=PV, name=name, **kwargs)
 
 class Slits4GapCenter_6IDB(MotorBundle):
     hcen = Component(EpicsMotor, "m5", labels=("motor",))
-    hgap = Component(EpicsMotor, "m6", labels=("motor",))
+    hsize = Component(EpicsMotor, "m6", labels=("motor",))
     vcen = Component(EpicsMotor, "m7", labels=("motor",))
-    vgap = Component(EpicsMotor, "m8", labels=("motor",))
+    vsize = Component(EpicsMotor, "m8", labels=("motor",))
 
-#class Slits4Blades_6IDB1(MotorBundle):
-#    top = Component(EpicsMotor, "m42", labels=("motor",))
-#    bottom = Component(EpicsMotor, "m41", labels=("motor",))
-#    inboard = Component(EpicsMotor, "m44", labels=("motor",))
-#    outboard = Component(EpicsMotor, "m43", labels=("motor",))
+# White beam slit
+#wbslt = SlitDevice('4idb:', 'wbslt',
+#                   {'top': 'm25', 'bot': 'm26', 'out': 'm27', 'inb': 'm28'},
+#                   1)
+#sd.baseline.append(wbslt)
 
-#class Slits4Blades_6IDB2(MotorBundle):
-#    top = Component(EpicsMotor, "m45", labels=("motor",))
-#    bottom = Component(EpicsMotor, "m46", labels=("motor",))
-#    inboard = Component(EpicsMotor, "m48", labels=("motor",))
-#    outboard = Component(EpicsMotor, "m47", labels=("motor",))
+# slit1
+sl1 = SlitDevice('6idb1:', 'sl1',
+                   {'top': 'm42', 'bot': 'm41', 'out': 'm43', 'inb': 'm44'},
+                   1)
+sl1.vcen.tolerance.put(0.003)
+sl1.vsize.tolerance.put(0.009)
+sd.baseline.append(sl1)
 
-#slit1 = Slits4Blades_6IDB1("6idb1:", name="slit1", labels=("slits",))
-#slit2 = Slits4Blades_6IDB2("6idb1:", name="slit2", labels=("slits",))
-slit3 = Slits4Blades_6IDB3("6idb1:", name="slit3", labels=("slits",))
-slit4 = Slits4GapCenter_6IDB("6idb1:", name="slit4", labels=("slits",))
+# slit2
+sl2 = SlitDevice('6idb1:', 'sl2',
+                   {'top': 'm45', 'bot': 'm46', 'out': 'm47', 'inb': 'm48'},
+                   2)
+sd.baseline.append(sl2)
+
+# slit3
+sl3 = SlitDevice('6idb1:', 'sl3',
+                    {'top': 'm1', 'bot': 'm2', 'out': 'm4', 'inb': 'm3'},
+                    3)
+sd.baseline.append(sl3)
+
+# slit4
+sl4 = Slits4GapCenter_6IDB("6idb1:", name="sl4", labels=("slits",))
+

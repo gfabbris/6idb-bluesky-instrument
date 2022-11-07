@@ -50,6 +50,22 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
     stats4 = ADComponent(StatsPlugin, 'Stats4:')
     stats5 = ADComponent(StatsPlugin, 'Stats5:')
 
+    def enable_hdf_plugin(self):
+        # if "hdf1" not in self.read_attrs:
+        #     self.read_attrs.append("hdf1")
+        self.hdf1.kind = 3  # <Kind.config|normal: 3>
+        self.hdf1.stage_sigs["auto_save"] = 1
+        self.hdf1.stage_sigs["enable"] = 1
+
+    def disable_hdf_plugin(self):
+        # if "hdf1" in self.read_attrs:
+        #     self.read_attrs.remove("hdf1")
+        self.hdf1.kind = 0  # <Kind.omitted: 0>
+        self.hdf1.stage_sigs["auto_save"] = 0
+        self.hdf1.stage_sigs["enable"] = 0
+
+# TODO : staging
+
     def default_settings(self):
         # Enter all the important default settings here.
         self.cam.image_mode.put("Single")
