@@ -65,17 +65,13 @@ class SlitDevice(Device):
 
         super().__init__(prefix=PV, name=name, **kwargs)
 
+
 class Slits4GapCenter_6IDB(MotorBundle):
     hcen = Component(EpicsMotor, "m5", labels=("motor",))
     hsize = Component(EpicsMotor, "m6", labels=("motor",))
     vcen = Component(EpicsMotor, "m7", labels=("motor",))
     vsize = Component(EpicsMotor, "m8", labels=("motor",))
 
-# White beam slit
-#wbslt = SlitDevice('4idb:', 'wbslt',
-#                   {'top': 'm25', 'bot': 'm26', 'out': 'm27', 'inb': 'm28'},
-#                   1)
-#sd.baseline.append(wbslt)
 
 # slit1
 sl1 = SlitDevice('6idb1:', 'sl1',
@@ -99,4 +95,3 @@ sd.baseline.append(sl3)
 
 # slit4
 sl4 = Slits4GapCenter_6IDB("6idb1:", name="sl4", labels=("slits",))
-

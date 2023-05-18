@@ -117,4 +117,3 @@ try:
 except TimeoutError:
     print("Could not connect 'dp_pilatusASD:'")
     pilatus100k = None
-

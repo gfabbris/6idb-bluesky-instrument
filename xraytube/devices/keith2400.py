@@ -1,29 +1,49 @@
-from ophyd import Component
-from ophyd import Device
-from ophyd import EpicsSignal
-from ophyd import EpicsSignalRO
-# from ophyd import EpicsSignalWithRBV  #  PV:name and PV:name_RBV
-    # EpicsSignalWithRBV same as EpicsSignal, "PV:name", read_pv="_RBV", write_pv=""
+from ophyd import Component, Device, EpicsSignal
+from apstools.devices import PVPositionerSoftDoneWithStop
 
-class keith2400_input(Device):    
-#    voltage = Component(EpicsSignal, "setVoltAO")
-    voltage = Component(EpicsSignal, "setVoltRdAI",write_pv="setVoltAO")
-    voltageRange = Component(EpicsSignal, "vRangeMO")
+from ..session_logs import logger
 
-#    currnet = Component(EpicsSignal, "setCurrAO")
-    current = Component(EpicsSignal, "setCurrRdAI",write_pv="setCurrAO")
-    currentRange = Component(EpicsSignal, "iRangeMO")
-
-class keith2400_meas(Device):
-    voltage = Component(EpicsSignalRO, "measVoltAI")
-    current = Component(EpicsSignalRO, "measCurrAI")
-    sense_function = Component(EpicsSignal, "senseFunctionMO", string=True, kind ="config")
+logger.info(__file__)
+__all__ = "fourc psic".split()
 
 
-class keith2400_Device(Device):
-    inp = Component(keith2400_input, "")
-    meas = Component(keith2400_meas, "")
-    source_function = Component(EpicsSignal, "sourceFunctionMO", string=True, kind ="config")
- 
-keith2400 = keith2400_Device("6idb1:K24K:", name="keith2400")
-#sd.baseline.append(keith2400)
+class VoltageCurrentPositioner(PVPositionerSoftDoneWithStop):
+
+    setpoint = Component(
+        EpicsSignal, "{prefix}{_setpoint_pv}",
+        write_pv="{prefix}{_setpoint_pv_set}"
+    )
+
+    def __init__(self, *args, setpoint_pv_set="", **kwargs):
+        self._setpoint_pv_set = setpoint_pv_set
+        super().__init__(*args, **kwargs)
+
+
+class Keithley2400Device(Device):
+    voltage = Component(
+        VoltageCurrentPositioner,
+        readback_pv="measVoltAI",
+        setpoint_pv="setVoltRdAI",
+        setpoint_pv_set="setVoltAO"
+    )
+    voltage_range = Component(EpicsSignal, "vRangeMO")
+
+    current = Component(
+        VoltageCurrentPositioner,
+        readback_pv="measCurrAI",
+        setpoint_pv="setCurrRdAI",
+        setpoint_pv_set="setCurrAO"
+    )
+    current_range = Component(EpicsSignal, "iRangeMO")
+
+    sense_function = Component(
+        EpicsSignal, "senseFunctionMO", string=True, kind="config"
+    )
+    source_function = Component(
+        EpicsSignal, "sourceFunctionMO", string=True, kind="config"
+    )
+
+
+keith2400 = Keithley2400Device("6idb1:K24K:", name="keith2400")
+# TODO: Alternative to skip the line below is to create a loading function.
+# sd.baseline.append(keith2400)

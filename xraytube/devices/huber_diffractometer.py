@@ -7,9 +7,11 @@ logger.info(__file__)
 import gi
 gi.require_version('Hkl', '5.0')
 
-from hkl.geometries import E4CV
+from hkl.geometries import E4CV, E6C
+from hkl.user import select_diffractometer
 from ophyd import EpicsMotor, PseudoSingle
 from ophyd import Component as Cpt
+
 
 class FourCircle(E4CV):
     """
@@ -30,16 +32,15 @@ class FourCircle(E4CV):
 fourc = FourCircle("", name="fourc")
 
 for item in "h k l".split():
-    getattr(fourc, item).readback.kind="normal"
+    getattr(fourc, item).readback.kind = "normal"
 
 for item in "omega chi phi tth".split():
-    getattr(fourc, item).user_readback.kind="normal"
+    getattr(fourc, item).user_readback.kind = "normal"
 
-from hkl.geometries import E6C
 
 class SixCircle(E6C):
     """
-#    Our 6-circle.  Eulerian.  
+    Our 6-circle.  Eulerian.
     """
     # the reciprocal axes are called "pseudo" in hklpy
     h = Cpt(PseudoSingle, '')
@@ -57,16 +58,4 @@ class SixCircle(E6C):
 
 psic = SixCircle("", name="psic")
 
-from hkl.user import select_diffractometer
 select_diffractometer(psic)
-
-# Make sure all motors are not hinted!
-# for item in "h k l".split():
-#     getattr(fourc, item).readback.kind = "normal"
-    # getattr(psic, item).readback.kind = "normal"
-
-# for item in "omega chi phi tth".split():
-#     getattr(fourc, item).user_readback.kind = "normal"
-
-# for item in "omega mu chi phi gamma delta".split():
-    # getattr(psic, item).user_readback.kind = "normal"
