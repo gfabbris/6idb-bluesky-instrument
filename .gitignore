@@ -1,6 +1,7 @@
 # linux error file
 core
 core.*
+.DS_Store
 
 # stdlogpj (Bluesky) log files
 .logs/
