@@ -1,4 +1,4 @@
-__all__ = "fourc psic".split()
+__all__ = "fourc psic _geom_".split()
 
 from ..session_logs import logger
 
@@ -8,9 +8,8 @@ import gi
 gi.require_version('Hkl', '5.0')
 
 from hkl.geometries import E4CV, E6C
-from hkl.user import select_diffractometer
-from ophyd import EpicsMotor, PseudoSingle
-from ophyd import Component as Cpt
+from hkl.user import select_diffractometer, _geom_
+from ophyd import EpicsMotor, PseudoSingle, Component as Cpt
 
 
 class FourCircle(E4CV):
