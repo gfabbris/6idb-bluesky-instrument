@@ -3,7 +3,7 @@ core
 core.*
 
 # old stuff
-archives/
+archive/
 
 # stdlogpj (Bluesky) log files
 .logs/
