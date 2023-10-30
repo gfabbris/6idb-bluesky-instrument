@@ -1,15 +1,19 @@
 """
-ensure BlueSky is available
+ensure Bluesky is available
 """
 
 __all__ = []
 
-from ..session_logs import logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 logger.info(__file__)
-import sys
 
-# ensure BlueSky is available
+import sys
+from .. import iconfig
+
+# ensure Bluesky is available
 try:
     import bluesky
 except ImportError:
@@ -20,18 +24,40 @@ except ImportError:
         "You should exit now and find the ipython with Bluesky."
     )
 
+# ensure minimum bluesky version
 
-req_version = (1, 6)
+req_version = tuple(iconfig.get("MINIMUM_BLUESKY_VERSION", (1, 10)))
 cur_version = tuple(map(int, bluesky.__version__.split(".")[:2]))
 if cur_version < req_version:
     ver_str = ".".join((map(str, req_version)))
-    raise ValueError(f"Need bluesky version {ver_str} or higher" f", found version {bluesky.__version__}")
+    raise ValueError(
+        f"Need bluesky version {ver_str} or higher"
+        f", found version {bluesky.__version__}"
+    )
 
+# ensure minimum ophyd version
 
 import ophyd
 
-req_version = (1, 4)
+req_version = tuple(iconfig.get("MINIMUM_OPHYD_VERSION", (1, 6)))
 cur_version = tuple(map(int, ophyd.__version__.split(".")[:2]))
 if cur_version < req_version:
     ver_str = ".".join((map(str, req_version)))
-    raise ValueError(f"Need ophyd version {ver_str} or higher" f", found version {ophyd.__version__}")
+    raise ValueError(
+        f"Need ophyd version {ver_str} or higher"
+        f", found version {ophyd.__version__}"
+    )
+
+
+# ensure minimum databroker version
+
+import databroker
+
+req_version = tuple(iconfig.get("MINIMUM_DATABROKER_VERSION", (1, 2)))
+cur_version = tuple(map(int, databroker.__version__.split(".")[:2]))
+if cur_version < req_version:
+    ver_str = ".".join((map(str, req_version)))
+    raise ValueError(
+        f"Need databroker version {ver_str} or higher"
+        f", found version {databroker.__version__}"
+    )

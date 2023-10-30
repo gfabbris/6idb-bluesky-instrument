@@ -17,14 +17,14 @@ import apstools.utils
 import datetime
 import os
 
-from ..framework import RE, callback_db
+from ..framework import RE
 
 # write scans to SPEC data file
 specwriter = SpecWriterCallback()
 # _path = "/tmp"      # make the SPEC file in /tmp (assumes OS is Linux)
 _path = os.getcwd()  # make the SPEC file in current working directory (assumes is writable)
 specwriter.newfile(os.path.join(_path, specwriter.spec_filename))
-callback_db["specwriter"] = RE.subscribe(specwriter.receiver)
+RE.subscribe(specwriter.receiver)
 
 logger.info(f"writing to SPEC file: {specwriter.spec_filename}")
 logger.info("   >>>>   Using default SPEC file name   <<<<")

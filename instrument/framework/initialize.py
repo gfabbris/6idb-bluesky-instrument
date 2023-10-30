@@ -7,10 +7,11 @@ __all__ = """
     bp  bps  bpp
     summarize_plan
     np
-    callback_db
     """.split()
 
-from ..session_logs import logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 logger.info(__file__)
 
@@ -54,7 +55,7 @@ def get_md_path():
 
 # Set up a RunEngine and use metadata backed PersistentDict
 RE = RunEngine({})
-RE.md = PersistentDict(md_path)
+RE.md = PersistentDict(get_md_path())
 
 # Connect with our mongodb database
 catalog_name = iconfig.get("DATABROKER_CATALOG", "6idb")
@@ -88,13 +89,14 @@ if _ipython is not None:
 # Set up the BestEffortCallback.
 bec = BestEffortCallback()
 RE.subscribe(bec)
-peaks = bec.peaks  # just as alias for less typing
+peaks = bec.peaks  # just an alias for less typing
 bec.disable_baseline()
 
 # At the end of every run, verify that files were saved and
 # print a confirmation message.
-# from bluesky.callbacks.broker import verify_files_saved
-# callback_db['post_run_verify'] = RE.subscribe(post_run(verify_files_saved), 'stop')
+if iconfig.get("VERIFY_FILES_SAVED", False):
+    from bluesky.callbacks.broker import verify_files_saved
+    RE.subscribe(post_run(verify_files_saved), 'stop')
 
 # Uncomment the following lines to turn on
 # verbose messages for debugging.
@@ -115,3 +117,35 @@ if not EpicsSignalBase._EpicsSignalBase__any_instantiated:
         write_timeout=iconfig.get("PV_WRITE_TIMEOUT", TIMEOUT),
         connection_timeout=iconfig.get("PV_CONNECTION_TIMEOUT", TIMEOUT),
     )
+
+_pv = iconfig.get("RUN_ENGINE_SCAN_ID_PV")
+if _pv is None:
+    logger.info("Using RunEngine metadata for scan_id")
+else:
+    from ophyd import EpicsSignal
+
+    logger.info("Using EPICS PV %s for scan_id", _pv)
+    scan_id_epics = EpicsSignal(_pv, name="scan_id_epics")
+
+    def epics_scan_id_source(_md):
+        """
+        Callback function for RunEngine.  Returns *next* scan_id to be used.
+
+        * Ignore metadata dictionary passed as argument.
+        * Get current scan_id from PV.
+        * Apply lower limit of zero.
+        * Increment (so that scan_id numbering starts from 1).
+        * Set PV with new value.
+        * Return new value.
+
+        Exception will be raised if PV is not connected when next
+        ``bps.open_run()`` is called.
+        """
+        new_scan_id = max(scan_id_epics.get(), 0) + 1
+        scan_id_epics.put(new_scan_id)
+        return new_scan_id
+
+    # tell RunEngine to use the EPICS PV to provide the scan_id.
+    RE.scan_id_source = epics_scan_id_source
+    scan_id_epics.wait_for_connection()
+    RE.md["scan_id"] = scan_id_epics.get()
