@@ -67,4 +67,9 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# user content
 *jwkim_github.dat
+singh*
+
+# databroker local data catalog files
+*.msgpack

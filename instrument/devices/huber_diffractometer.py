@@ -16,19 +16,24 @@ class FourCircle(E4CV):
     Our 4-circle.  Eulerian.  Vertical scattering orientation.
     """
     # the reciprocal axes are called "pseudo" in hklpy
-    h = Cpt(PseudoSingle, '')
-    k = Cpt(PseudoSingle, '')
-    l = Cpt(PseudoSingle, '')
+    h = Cpt(PseudoSingle, '', kind="normal")
+    k = Cpt(PseudoSingle, '', kind="normal")
+    l = Cpt(PseudoSingle, '', kind="normal")
 
     # the motor axes are called "real" in hklpy
-    omega = Cpt(EpicsMotor, "6idb1:m17")
-    chi = Cpt(EpicsMotor, "6idb1:m19")
-    phi = Cpt(EpicsMotor, "6idb1:m20")
-    tth = Cpt(EpicsMotor, "6idb1:m18")
+    omega = Cpt(EpicsMotor, "6idb1:m17", kind="normal")
+    chi = Cpt(EpicsMotor, "6idb1:m19", kind="normal")
+    phi = Cpt(EpicsMotor, "6idb1:m20", kind="normal")
+    tth = Cpt(EpicsMotor, "6idb1:m18", kind="normal")
 
 
 fourc = FourCircle("", name="fourc")
 
+for item in "h k l".split():
+    getattr(fourc, item).readback.kind="normal"
+
+for item in "omega chi phi tth".split():
+    getattr(fourc, item).user_readback.kind="normal"
 
 from hkl.geometries import E6C
 

@@ -108,7 +108,13 @@ class MyPilatusDetector(SingleTrigger, PilatusDetector):
         for i in range(1, 5):
             getattr(self, f"stats{i}").total.kind = "hinted"
 
-pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
-pilatus100k.hdf1.stage_sigs["auto_save"] = 1
-pilatus100k.cam.stage_sigs["trigger_mode"] = 0
-pilatus100k.plot_roi1()
+try:
+    # pilatus100k = MyPilatusDetector("s6_pilatus:", name="pilatus100k")
+    pilatus100k = MyPilatusDetector("dp_pilatusASD:", name="pilatus100k")
+    pilatus100k.hdf1.stage_sigs["auto_save"] = 1
+    pilatus100k.cam.stage_sigs["trigger_mode"] = 0
+    pilatus100k.plot_roi1()
+except TimeoutError:
+    print("Could not connect 'dp_pilatusASD:'")
+    pilatus100k = None
+

@@ -26,3 +26,4 @@ class keith2400_Device(Device):
     source_function = Component(EpicsSignal, "sourceFunctionMO", string=True, kind ="config")
  
 keith2400 = keith2400_Device("6idb1:K24K:", name="keith2400")
+#sd.baseline.append(keith2400)

@@ -6,6 +6,10 @@ from .session_logs import logger
 
 logger.info(__file__)
 
+from IPython import get_ipython
+# terse error dumps (Exception tracebacks)
+get_ipython().run_line_magic('xmode', 'Minimal')
+
 from . import mpl
 
 logger.info("#### Bluesky Framework ####")

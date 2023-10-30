@@ -16,4 +16,4 @@ from .diff_table import diff
 from .slits import *
 from .keith2400 import *
 from .rp100powersupply import *
-
+from .lakeshores import lakeshore340
