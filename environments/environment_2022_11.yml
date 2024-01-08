@@ -1,7 +1,7 @@
-name: bluesky_2022_1
+name: bluesky_2022_11
 
 # use:
-#   date; conda env create --force -f ./environment_2022_1.yml; date
+#   date; conda env create --force -f ./environment_2022_2.yml; date
 
 channels:
   - defaults
@@ -11,7 +11,7 @@ channels:
 
 dependencies:
   # --- Python core packages
-  - python<3.8
+  - python=3.9
   - ipython
   - jupyter
   - jupyterlab
@@ -40,17 +40,16 @@ dependencies:
   - scikit-image
   - xlrd
   # --- Bluesky framework packages
-  - apstools
+  - apstools>=1.6.8
   - area-detector-handlers
   - bluesky>=1.8.1
-  - databroker>=1.2.4
+  - bluesky-queueserver
+  - bluesky-widgets
+  - databroker=1.2.5
   - databroker-pack
   - hklpy>=1.0.1
   - ophyd>=1.6.3
   - pydm
-  # --- optional Bluesky framework packages for evaluation
-  - bluesky-queueserver
-  - bluesky-widgets
   # --- user-requested packages
   - nexpy
   - punx
@@ -60,14 +59,11 @@ dependencies:
   - spec2nexus
   - stdlogpj
   - xrayutilities
-  # --- packaging and publishing
-  - conda-build
-  - coverage
-  - sphinx
-  - sphinxcontrib-napoleon
-  - twine
-  - versioneer
+  - streamz
   - pip:
-    - https://github.com/BCDA-APS/adl2pydm/archive/main.zip
-    # - bluesky-webclient is NOT Python software, don't install it this way
-    #    https://github.com/bluesky/bluesky-webclient
+    # - apsbss
+    - polartools
+    # - https://github.com/BCDA-APS/adl2pydm/archive/main.zip
+    # --- optional Bluesky framework packages for evaluation
+    # - bluesky-queueserver-api
+

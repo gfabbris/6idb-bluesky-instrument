@@ -2,6 +2,9 @@
 core
 core.*
 
+# old stuff
+archive/
+
 # stdlogpj (Bluesky) log files
 .logs/
 
@@ -66,3 +69,10 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# user content
+*jwkim_github.dat
+singh*
+
+# databroker local data catalog files
+*.msgpack

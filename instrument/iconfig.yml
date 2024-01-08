@@ -1,0 +1,72 @@
+# configuration.yml
+
+# configuration for the instrument package
+# simple key:value pairs
+
+# ADSIM_IOC_PREFIX: "ad:"
+# GP_IOC_PREFIX: "gp:"
+
+DATABROKER_CATALOG: &databroker_catalog 6idb
+
+# default RunEngine metadata
+RUNENGINE_METADATA:
+  beamline_id: 6-ID-B
+  instrument_name: APS 6-ID-B
+  proposal_id: development
+  databroker_catalog: *databroker_catalog
+
+# Uncomment and edit to define a PV to use for the `scan_id`.
+# The default behavior is to use `RE.md["scan_id"]`.
+# RUN_ENGINE_SCAN_ID_PV: "IOC:integer"
+
+# permissions
+ALLOW_AREA_DETECTOR_WARMUP: false
+ENABLE_AREA_DETECTOR_IMAGE_PLUGIN: false
+ENABLE_CALCS: false
+USE_PROGRESS_BAR: false
+WRITE_SPEC_DATA_FILES: true
+VERIFY_FILES_SAVED: false
+
+# ----------------------------------
+
+# Directory to "autosave" the RE.md dictionary (uses PersistentDict)
+# Uncomment and modify to change from the default.
+# RUNENGINE_MD_PATH: /home/USERNAME/Bluesky_RunEngine_md
+
+# override default control layer for ophyd
+# if undefined, defaults to PyEpics
+# OPHYD_CONTROL_LAYER: PyEpics
+# OPHYD_CONTROL_LAYER: caproto
+
+# Uncomment any of these to override the defaults
+LOGGING:
+  # MAX_BYTES: 1000000
+  NUMBER_OF_PREVIOUS_BACKUPS: 9
+  # LOG_PATH: /tmp
+  # If LOG_PATH undefined, this session will log into PWD/logs/
+  # where PWD is present working directory when session is started
+
+# default timeouts (seconds)
+PV_READ_TIMEOUT: &TIMEOUT 60
+PV_WRITE_TIMEOUT: *TIMEOUT
+PV_CONNECTION_TIMEOUT: *TIMEOUT
+
+XMODE_DEBUG_LEVEL: Minimal
+
+# Minimum software package version checks: MAJOR.minor (no .patch).
+# These will be converted to tuple() for comparisons.
+MINIMUM_PYTHON_VERSION:
+  - 3
+  - 8
+MINIMUM_BLUESKY_VERSION:
+  - 1
+  - 10
+MINIMUM_OPHYD_VERSION:
+  - 1
+  - 7
+MINIMUM_DATABROKER_VERSION:
+  - 1
+  - 2
+
+# identify the version of this iconfig.yml file
+ICONFIG_VERSION: 1.0.1
