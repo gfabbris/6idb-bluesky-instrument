@@ -17,5 +17,5 @@ class Cryo(MotorBundle):
     z = Component(EpicsMotor, 'm35') #cryostat carrier z motor
 
 
-cryo = Cryo('6idb1:', name='cryo')
+cryo = Cryo('6idb1:', name='cryo', labels=("motor",))
 sd.baseline.append(cryo)

@@ -16,5 +16,5 @@ class Diff(MotorBundle):
     y2 = Component(EpicsMotor, 'm26') #cdiffractormeter table y2 motor
 
 
-diff = Diff('6idb1:', name='diff')
+diff = Diff('6idb1:', name='diff', labels=("motor",))
 sd.baseline.append(diff)
