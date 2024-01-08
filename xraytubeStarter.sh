@@ -7,7 +7,7 @@ if [[ "${CONDA_BIN}" = "" ]]; then
 fi
 export CONDA_ACTIVATE="${CONDA_BIN}/activate"
 echo "CONDA_ACTIVATE = ${CONDA_ACTIVATE}"
-export CONDA_ENVIRONMENT=bluesky_2022_11
+export CONDA_ENVIRONMENT=bluesky_2023_3
 
 # export CONDA_ENVIRONMENT=base
 

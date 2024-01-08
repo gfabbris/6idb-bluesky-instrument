@@ -55,7 +55,7 @@ import numpy as np
 
 
 def get_md_path():
-    md_dir_name = "Bluesky_RunEngine_md"
+    md_dir_name = "Bluesky_RunEngine_xraytube_md"
     if os.environ == "win32":
         home = os.environ["LOCALAPPDATA"]
         path = os.path.join(home, md_dir_name)
@@ -82,6 +82,7 @@ RE.md = PersistentDict(md_path)
 if old_md is not None:
     logger.info("migrating RE.md storage to PersistentDict")
     RE.md.update(old_md)
+print(f"saving metadata subdirectory {md_path}")
 
 # keep track of callback subscriptions
 callback_db = {}
