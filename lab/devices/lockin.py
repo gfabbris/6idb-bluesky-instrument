@@ -2,16 +2,16 @@
 Lock in
 """
 
-__all__ = ['lockin1', ]
+__all__ = ['lockin810', 'lockin830']
 
-from .srs830 import LockinDevice
+from .srs_lockins import SRS810Device, SRS830Device
 from ..framework import sd
 from ..session_logs import logger
 logger.info(__file__)
 
 
-lockin1 = LockinDevice('4idd:SRS810:1:', name='lockin1', labels=('detectors',))
-sd.baseline.append(lockin1)
+lockin810 = SRS810Device('6idlab:SRS810:2:', name='lockin810', labels=('detectors',))
+sd.baseline.append(lockin810)
 
-lockin2 = LockinDevice('4idd:SRS810:1:', name='lockin2', labels=('detectors',))
-sd.baseline.append(lockin2)
+lockin830 = SRS830Device('6idlab:SR830:1:', name='lockin830', labels=('detectors',))
+sd.baseline.append(lockin830)
